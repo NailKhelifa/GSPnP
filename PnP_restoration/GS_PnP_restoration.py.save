@@ -12,12 +12,11 @@ from drunet_nail import DRUNet
 
 class PnP_restoration():
 
-    def __init__(self, hparams, device):
+    def __init__(self, hparams):
 
         self.hparams = hparams
-        self.device = device
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.initialize_cuda_denoiser()
-        self.sf = 1 ## added by hand as it does not change a lot the result + it corresponds to the default value in restore function 
 
     def initialize_cuda_denoiser(self):
         '''
@@ -26,10 +25,10 @@ class PnP_restoration():
         model = DRUNet()
 
         # Chemin vers le fichier de checkpoint
-        checkpoint_path = self.hparams.pretrained_checkpoint
+        checkpoint_path = '/store/CIA/nbk24/trained_models/model_noise_noise_01_patches_50_epochs_2_batch_64.ckpt'
 
         # Chargez le modèle
-        model.load_state_dict(torch.load(checkpoint_path))
+        model = torch.load(checkpoint_path).to(1)
         self.denoiser_model = model
 
 
@@ -391,8 +390,7 @@ class PnP_restoration():
             plt.plot(self.conv[i],'-o')
             # plt.plot(conv_DPIR[:self.hparams.maxitr], marker=marker_list[-1], markevery=10, label='DPIR')
         plt.plot(conv_rate, '--', color='red', label=r'$\mathcal{O}(\frac{1}{K})$')
-        plt.semilogy()
-        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+        plt.semilogy        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         plt.savefig(os.path.join(save_path, 'conv_log.png'), bbox_inches="tight")
 
         plt.figure(6)

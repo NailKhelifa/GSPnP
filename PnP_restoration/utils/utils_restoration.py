@@ -2,7 +2,6 @@ import numpy as np
 import random
 from scipy.fftpack import dct, idct
 import torch
-import cv2
 import os 
 
 

@@ -133,7 +133,7 @@ def p2o(psf, shape):
     #otf = torch.rfft(otf, 2, onesided=False)
     otf = fft(otf)
     n_ops = torch.sum(torch.tensor(psf.shape).type_as(psf) * torch.log2(torch.tensor(psf.shape).type_as(psf)))
-    otf[..., 1][torch.abs(otf[..., 1]) < n_ops * 2.22e-16] = torch.tensor(0).type_as(psf)
+    otf[..., 1][torch.abs(otf[..., 1]) < n_ops * 2.22e-16] = torch.zeros(0, dtype=psf.dtype).type_as(psf)
     return otf
 
 
